@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demand Planning Intelligence | FY2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --navy:    #002147;
+  --navy2:   #003366;
+  --navy3:   #1a4b7a;
+  --blue:    #005b99;
+  --blue2:   #0077cc;
+  --red:     #c0392b;
+  --red2:    #e74c3c;
+  --amber:   #d4820a;
+  --green:   #1a7a4a;
+  --gray1:   #f5f6f7;
+  --gray2:   #e8eaed;
+  --gray3:   #c5c9d0;
+  --gray4:   #8d939e;
+  --gray5:   #4a5160;
+  --white:   #ffffff;
+  --text:    #1a1f2e;
+  --text2:   #4a5160;
+  --text3:   #8d939e;
+  --border:  #d6dae2;
+  --accent:  #005b99;
+  --serif:   'Libre Baskerville', 'Bookman Old Style', 'Book Antiqua', Georgia, serif;
+  --sans:    'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: 14px; }
+
+body {
+  background: var(--gray1);
+  font-family: var(--sans);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ─── TOP HEADER ─── */
+.header {
+  background: var(--navy);
+  display: flex;
+  align-items: stretch;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  gap: 14px;
+  min-width: 280px;
+}
+
+.mk-bar {
+  width: 4px;
+  height: 36px;
+  background: linear-gradient(to bottom, #4a9fd4, #005b99);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+}
+
+.header-sub {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 28px;
+  flex: 1;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+  padding-left: 20px;
+}
+
+.meta-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+.meta-value {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.header-right {
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.live-badge {
+  background: rgba(192,57,43,0.9);
+  color: #fff;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: blink 1.4s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ─── NAVIGATION ─── */
+.nav {
+  background: var(--navy2);
+  display: flex;
+  padding: 0 28px;
+  gap: 0;
+  border-bottom: 3px solid var(--navy3);
+}
+
+.nav-item {
+  padding: 13px 22px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.nav-item:hover { color: rgba(255,255,255,0.85); }
+
+.nav-item.active {
+  color: #fff;
+  border-bottom-color: #4a9fd4;
+}
+
+.nav-num {
+  background: rgba(255,255,255,0.12);
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.nav-item.active .nav-num {
+  background: #4a9fd4;
+}
+
+/* ─── PAGE ─── */
+.page { display: none; padding: 24px 28px 40px; }
+.page.active { display: block; }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 12px;
+  padding-left: 10px;
+  border-left: 3px solid var(--blue);
+}
+
+/* ─── CRITICAL ALERT ─── */
+.alert-strip {
+  background: #fff1f0;
+  border: 1px solid #f5a0a0;
+  border-left: 4px solid var(--red);
+  padding: 12px 18px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+}
+
+.alert-strip-title {
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--red);
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.alert-strip-text {
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.alert-strip-text strong {
+  color: var(--red);
+  font-weight: 700;
+}
+
+/* ─── KPI ROW ─── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 18px 20px 16px;
+  position: relative;
+}
+
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.kpi-card.navy::after  { background: var(--navy); }
+.kpi-card.red::after   { background: var(--red); }
+.kpi-card.blue::after  { background: var(--blue); }
+.kpi-card.green::after { background: var(--green); }
+.kpi-card.amber::after { background: var(--amber); }
+
+.kpi-label {
+  font-family: var(--sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+
+.kpi-number {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.kpi-card.navy .kpi-number  { color: var(--navy); }
+.kpi-card.red .kpi-number   { color: var(--red); }
+.kpi-card.blue .kpi-number  { color: var(--blue); }
+.kpi-card.green .kpi-number { color: var(--green); }
+.kpi-card.amber .kpi-number { color: var(--amber); }
+
+.kpi-desc {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.4;
+}
+
+/* ─── GRIDS ─── */
+.grid-2  { display: grid; grid-template-columns: 1fr 1fr;    gap: 14px; margin-bottom: 18px; }
+.grid-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.grid-13 { display: grid; grid-template-columns: 1fr 2.2fr;  gap: 14px; margin-bottom: 18px; }
+.grid-31 { display: grid; grid-template-columns: 2.2fr 1fr;  gap: 14px; margin-bottom: 18px; }
+
+/* ─── CHART CARD ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 20px 22px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gray2);
+}
+
+.card-title {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 3px;
+}
+
+.card-sub {
+  font-size: 11px;
+  color: var(--text3);
+  font-style: italic;
+}
+
+.card-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.card-tag.blue  { color: var(--blue);  border-color: var(--blue);  background: #f0f7ff; }
+.card-tag.red   { color: var(--red);   border-color: var(--red);   background: #fff0f0; }
+.card-tag.amber { color: var(--amber); border-color: var(--amber); background: #fff8ee; }
+.card-tag.green { color: var(--green); border-color: var(--green); background: #f0fff6; }
+
+canvas { max-height: 230px; }
+canvas.tall { max-height: 310px; }
+
+/* ─── INSIGHT BOX ─── */
+.insight {
+  background: #f0f7ff;
+  border-left: 4px solid var(--blue);
+  padding: 13px 16px;
+  margin-bottom: 18px;
+  font-size: 12.5px;
+  color: var(--text2);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.insight strong { color: var(--navy); font-style: normal; }
+
+/* ─── VARIABILITY BARS ─── */
+.var-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+.var-lbl { width: 75px; font-size: 12px; color: var(--text2); font-weight: 500; }
+.var-track { flex: 1; background: var(--gray2); height: 7px; }
+.var-fill { height: 100%; }
+.var-n { width: 20px; text-align: right; font-size: 12px; font-weight: 700; color: var(--text); }
+
+/* ─── HEAT TABLE ─── */
+.heat-wrap { overflow-x: auto; }
+.heat-grid {
+  display: grid;
+  grid-template-columns: 140px repeat(12, 1fr);
+  gap: 2px;
+  min-width: 900px;
+  font-size: 10px;
+}
+.heat-hdr {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: center;
+  padding: 5px 2px;
+  background: var(--gray1);
+}
+.heat-lbl {
+  font-size: 10.5px;
+  color: var(--text2);
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  background: var(--gray1);
+  font-family: var(--sans);
+  font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.heat-cell {
+  padding: 6px 2px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 9.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── TABLE ─── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.data-table th {
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--navy);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--gray2);
+  color: var(--text2);
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--gray1); }
+
+.sku-id {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--navy);
+  letter-spacing: 0.3px;
+}
+.neg { color: var(--red); font-weight: 700; }
+.pos { color: var(--green); font-weight: 600; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.pill-v1 { background: #e8f0fb; color: var(--blue); }
+.pill-v2 { background: #f3eeff; color: #6a3fc8; }
+.pill-v3 { background: #fff4e0; color: var(--amber); }
+.pill-v4 { background: #ffecec; color: var(--red); }
+.pill-na { background: var(--gray2); color: var(--text3); }
+.pill-low    { background: #e8f7ef; color: var(--green); }
+.pill-medium { background: #fff4e0; color: var(--amber); }
+.pill-high   { background: #ffecec; color: var(--red); }
+.flag-urgent  { color: var(--red);   font-weight: 700; font-size: 11px; }
+.flag-soon    { color: var(--amber); font-weight: 700; font-size: 11px; }
+.flag-monitor { color: var(--blue);  font-weight: 600; font-size: 11px; }
+
+.table-scroll { overflow-x: auto; overflow-y: auto; max-height: 340px; }
+
+/* ─── DIVIDER ─── */
+.divider { border: none; border-top: 1px solid var(--gray2); margin: 20px 0; }
+
+/* ─── LEGEND ─── */
+.legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 10px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); }
+.legend-swatch { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ─── FOOTNOTE ─── */
+.footnote {
+  font-size: 10px;
+  color: var(--text3);
+  font-style: italic;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray2);
+}
+
+/* ─── PAGE FADE ─── */
+@keyframes pgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.page.active { animation: pgIn 0.3s ease; }
+
+/* ─── FOOTER BAR ─── */
+.footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+  padding: 10px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="mk-bar"></div>
+    <div>
+      <div class="header-title">Demand Planning Intelligence</div>
+      <div class="header-sub">Supply Chain Executive Dashboard · FY2026</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="meta-item">
+      <div class="meta-label">Active SKUs</div>
+      <div class="meta-value">19</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Data Period</div>
+      <div class="meta-value">Jan – Dec 2026</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Categories</div>
+      <div class="meta-value">Energy Metering · Domestic Water</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Lead Time</div>
+      <div class="meta-value">4 Months (All SKUs)</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div>LIVE FY26</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-item active" onclick="switchTab('exec',this)"><span class="nav-num">1</span>Executive Scorecard</div>
+  <div class="nav-item" onclick="switchTab('inv',this)"><span class="nav-num">2</span>Inventory Health</div>
+  <div class="nav-item" onclick="switchTab('demand',this)"><span class="nav-num">3</span>Demand Planning</div>
+  <div class="nav-item" onclick="switchTab('risk',this)"><span class="nav-num">4</span>Supply Risk &amp; MRP</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 1 — EXECUTIVE SCORECARD
+════════════════════════════════════════════════ -->
+<div id="page-exec" class="page active">
+
+  <div class="alert-strip">
+    <div class="alert-strip-title">⚠ Critical Supply Alert</div>
+    <div class="alert-strip-text">
+      <strong>10 of 19 SKUs</strong> are projected to reach negative inventory during FY2026 — representing a significant service risk.
+      <strong>KM1PLS029P</strong> and <strong>KM1KMS031P</strong> enter deficit in February. Immediate PO release decisions are required.
+    </div>
+  </div>
+
+  <div class="section-label">Key Performance Indicators · Jan–Dec 2026</div>
+  <div class="kpi-row">
+    <div class="kpi-card navy">
+      <div class="kpi-label">Total Active SKUs</div>
+      <div class="kpi-number">19</div>
+      <div class="kpi-desc">Across Energy Metering &amp; Domestic Water categories</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">SKUs At Risk</div>
+      <div class="kpi-number">10</div>
+      <div class="kpi-desc">53% of portfolio projected stock-negative in FY26</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">Open Sales Orders</div>
+      <div class="kpi-number">37K</div>
+      <div class="kpi-desc">Units committed across FY26 backlog</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">SKUs Healthy</div>
+      <div class="kpi-number">9</div>
+      <div class="kpi-desc">Maintaining positive coverage through Dec 2026</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Uniform Lead Time</div>
+      <div class="kpi-number">4<span style="font-size:18px;font-family:var(--sans)"> mo</span></div>
+      <div class="kpi-desc">All SKUs — ordering window is critical</div>
+    </div>
+  </div>
+
+  <div class="grid-13">
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Portfolio Risk Profile</div>
+          <div class="card-sub">Variability &amp; stratification breakdown</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Demand Variability</div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--green)">Low</div>
+          <div class="var-track"><div class="var-fill" style="width:21%;background:var(--green)"></div></div>
+          <div class="var-n">4</div>
+        </div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--amber)">Medium</div>
+          <div class="var-track"><div class="var-fill" style="width:63%;background:var(--amber)"></div></div>
+          <div class="var-n">12</div>
+        </div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--red)">High</div>
+          <div class="var-track"><div class="var-fill" style="width:16%;background:var(--red)"></div></div>
+          <div class="var-n">3</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Stratification Tier</div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--blue)">V1 — Core</div>
+          <div class="var-track"><div class="var-fill" style="width:21%;background:var(--blue)"></div></div>
+          <div class="var-n">4</div>
+        </div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:#6a3fc8">V2</div>
+          <div class="var-track"><div class="var-fill" style="width:26%;background:#6a3fc8"></div></div>
+          <div class="var-n">5</div>
+        </div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--amber)">V3</div>
+          <div class="var-track"><div class="var-fill" style="width:21%;background:var(--amber)"></div></div>
+          <div class="var-n">4</div>
+        </div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--red)">V4</div>
+          <div class="var-track"><div class="var-fill" style="width:26%;background:var(--red)"></div></div>
+          <div class="var-n">5</div>
+        </div>
+        <div class="var-row">
+          <div class="var-lbl" style="color:var(--text3)">Unclassified</div>
+          <div class="var-track"><div class="var-fill" style="width:10%;background:var(--gray3)"></div></div>
+          <div class="var-n">2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Aggregate Projected Inventory — FY2026</div>
+          <div class="card-sub">Sum across all 19 SKUs · Positive surplus vs. negative deficit</div>
+        </div>
+        <div class="card-tag red">Deficit Signal</div>
+      </div>
+      <canvas id="c-aggInv" class="tall"></canvas>
+      <div class="footnote">Portfolio moves from net surplus in Jan to accelerating deficit from Feb onwards, driven primarily by bulk-volume SKUs KM1PLS029P and KM1KMS031P.</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Inventory Position Snapshot — January 2026</div>
+          <div class="card-sub">Projected end-of-month stock by SKU</div>
+        </div>
+        <div class="card-tag blue">Point-in-Time</div>
+      </div>
+      <canvas id="c-janHealth" class="tall"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Collaborative Forecast vs. Croston Baseline</div>
+          <div class="card-sub">Demand signal comparison by SKU</div>
+        </div>
+        <div class="card-tag amber">Consensus Gap</div>
+      </div>
+      <canvas id="c-fcVsCroston" class="tall"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 2 — INVENTORY HEALTH
+════════════════════════════════════════════════ -->
+<div id="page-inv" class="page">
+
+  <div class="insight">
+    <strong>CFO Lens:</strong> 10 of 19 SKUs will enter negative inventory territory during FY2026.
+    The most financially exposed are <strong>KM1PLS029P</strong> (−14,859 units by Dec),
+    <strong>KM1KMS031P</strong> (−8,534), and <strong>KM1UCM001P</strong> (−1,770).
+    With a uniform 4-month lead time, PO release deadlines for Q1 issues have already elapsed — escalation to procurement leadership is recommended immediately.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Projected Inventory Trajectories — Key SKUs</div>
+          <div class="card-sub">Lines crossing zero indicate stock-out risk</div>
+        </div>
+        <div class="card-tag red">Risk Exposure</div>
+      </div>
+      <canvas id="c-trajLines" class="tall"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">First Stock-Out Month by SKU</div>
+          <div class="card-sub">When each at-risk SKU first goes negative</div>
+        </div>
+        <div class="card-tag red">Urgency Sequence</div>
+      </div>
+      <canvas id="c-stockOutMonth" class="tall"></canvas>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:4px">Inventory Heatmap — All 19 SKUs × FY2026 Monthly</div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Full SKU Inventory Heatmap</div>
+        <div class="card-sub">Month-end projected inventory position · Green = healthy · Amber = low · Red = negative</div>
+      </div>
+    </div>
+    <div class="heat-wrap">
+      <div class="heat-grid" id="heatGrid"></div>
+    </div>
+    <div class="legend" style="margin-top:14px">
+      <div class="legend-item"><div class="legend-swatch" style="background:#d4edda"></div>Healthy (&gt;50 units)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#fff3cd"></div>Low Stock (1–50 units)</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#f8d7da"></div>Negative / Stock-Out Risk</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#e8eaed"></div>Zero / No Activity</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 3 — DEMAND PLANNING
+════════════════════════════════════════════════ -->
+<div id="page-demand" class="page">
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Monthly Collaborative Forecast — Top 6 SKUs</div>
+          <div class="card-sub">Agreed demand signal Jan–Dec FY2026</div>
+        </div>
+        <div class="card-tag blue">Demand Signal</div>
+      </div>
+      <canvas id="c-collabFC" class="tall"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Monthly Open Sales Orders — FY2026</div>
+          <div class="card-sub">Aggregate committed SO backlog by month</div>
+        </div>
+        <div class="card-tag amber">Backlog</div>
+      </div>
+      <canvas id="c-openSO" class="tall"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Demand Variability Index by SKU</div>
+          <div class="card-sub">Coefficient of Variation — higher values indicate harder-to-forecast demand</div>
+        </div>
+      </div>
+      <canvas id="c-cov" class="tall"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Salesforce Pipeline vs. Croston Baseline</div>
+          <div class="card-sub">Forecast consensus gap — identifies demand sensing misalignment</div>
+        </div>
+        <div class="card-tag blue">Consensus</div>
+      </div>
+      <canvas id="c-sfVsCroston" class="tall"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 4 — SUPPLY RISK & MRP
+════════════════════════════════════════════════ -->
+<div id="page-risk" class="page">
+
+  <div class="alert-strip">
+    <div class="alert-strip-title">⚠ PO Action Required</div>
+    <div class="alert-strip-text">
+      6 SKUs require immediate PO release. Given the <strong>4-month lead time</strong>, any deficit appearing before May 2026
+      requires a PO that should have been placed already. Escalate to procurement and finance leadership.
+    </div>
+  </div>
+
+  <div class="section-label">At-Risk SKU Register — Projected Inventory FY2026 (All values in units)</div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-header">
+      <div>
+        <div class="card-title">At-Risk SKU Detail Table</div>
+        <div class="card-sub">SKUs with projected negative inventory at any point during FY2026 · Parentheses indicate deficit</div>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="data-table" id="riskTable"></table>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Maximum Inventory Deficit by SKU</div>
+          <div class="card-sub">Peak shortfall if no procurement action is taken — FY2026</div>
+        </div>
+        <div class="card-tag red">Worst-Case Exposure</div>
+      </div>
+      <canvas id="c-deficit" class="tall"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Risk Quadrant — Lead Time vs. Demand Volatility</div>
+          <div class="card-sub">Bubble size = max monthly consumption · Red = at-risk SKU</div>
+        </div>
+      </div>
+      <canvas id="c-bubble" class="tall"></canvas>
+      <div class="legend" style="margin-top:10px">
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(192,57,43,0.4)"></div>At-Risk SKU</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(26,122,74,0.4)"></div>Healthy SKU</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Demand Planning Intelligence Dashboard · FY2026 · Prepared for Executive Review · All figures in units unless stated
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const SKUS = [
+  {s:'KM1UCM001P', cat:'Energy Metering', tier:'V1', price:85.5,    lt:4, min:2,   max:495,  std:141,  cov:1.11, var:'Medium', cr:126,  sf:320,  fc:[400,0,654,96,137,0,0,0,0,0,0,1812],   so:[400,126,654,126,137,126,126,126,126,126,126,0],   inv:[2472,463,-94,-748,-875,-1012,-1138,-1264,-1391,-1517,-1644,-1770]},
+  {s:'KM1UCM002P', cat:'Energy Metering', tier:'V1', price:85.5,    lt:4, min:4,   max:248,  std:90,   cov:1.17, var:'Medium', cr:77,   sf:129,  fc:[114,0,118,77,0,0,0,0,0,0,0,426],       so:[114,77,118,77,77,77,77,77,77,77,77,0],          inv:[1907,1430,1336,1218,1141,1064,987,910,832,755,678,601]},
+  {s:'KM1UCM003P', cat:'Energy Metering', tier:'V2', price:90.91,   lt:4, min:2,   max:76,   std:26,   cov:1.33, var:'Medium', cr:20,   sf:270,  fc:[0,0,0,4,0,0,0,0,0,0,0,186],            so:[20,20,20,20,20,20,20,20,20,20,20,0],            inv:[1225,1189,801,781,761,741,722,702,682,662,643,623]},
+  {s:'KM1UCM011P', cat:'Energy Metering', tier:'V1', price:2076.88, lt:4, min:2,   max:68,   std:19,   cov:1.75, var:'Medium', cr:11,   sf:0,    fc:[12,5,3,14,0,0,0,0,0,0,0,34],           so:[12,11,11,14,11,11,11,11,11,11,11,0],            inv:[26,7,-14,-25,-39,-50,-61,-71,-82,-93,-104,-114]},
+  {s:'KM1UCM012P', cat:'Energy Metering', tier:'V2', price:2358.37, lt:4, min:2,   max:31,   std:10,   cov:1.42, var:'Medium', cr:7,    sf:5,    fc:[2,4,5,2,0,0,0,0,0,0,0,13],             so:[7,7,7,7,7,7,7,7,7,7,7,0],                      inv:[125,112,99,92,84,77,69,62,55,47,40,33]},
+  {s:'KM1UCM013P', cat:'Energy Metering', tier:'V2', price:3073.61, lt:4, min:2,   max:20,   std:6,    cov:1.16, var:'Medium', cr:5,    sf:4,    fc:[0,7,0,0,0,0,0,0,0,0,0,7],              so:[5,7,5,5,5,5,5,5,5,5,5,0],                      inv:[80,63,36,31,26,21,15,10,5,0,-6,-11]},
+  {s:'KM1UCM015P', cat:'Energy Metering', tier:'V3', price:6048.66, lt:4, min:2,   max:4,    std:1,    cov:1.28, var:'Medium', cr:1,    sf:0,    fc:[6,1,0,2,0,0,0,0,0,0,0,9],              so:[6,1,1,2,1,1,1,1,1,1,1,0],                      inv:[18,0,-2,-3,-5,-6,-7,-8,-9,-10,-11,-12]},
+  {s:'KM1UCM017P', cat:'Energy Metering', tier:'V2', price:341.25,  lt:4, min:2,   max:19,   std:7,    cov:1.56, var:'Medium', cr:4,    sf:9,    fc:[2,0,1,7,0,0,0,0,0,0,0,10],             so:[4,4,4,7,4,4,4,4,4,4,4,0],                      inv:[104,96,90,86,79,74,70,65,61,57,52,48]},
+  {s:'KM1SOB011P', cat:'Domestic Water',  tier:'V1', price:111.63,  lt:4, min:5,   max:716,  std:225,  cov:1.49, var:'Medium', cr:151,  sf:75,   fc:[0,307,0,0,0,0,0,0,0,0,0,307],          so:[151,307,151,151,151,151,151,151,151,151,151,0], inv:[2908,2758,2451,2080,1930,1779,1629,1478,1328,1177,1027,876]},
+  {s:'KM1SOB012P', cat:'Domestic Water',  tier:'V2', price:111.68,  lt:4, min:2,   max:61,   std:23,   cov:1.59, var:'Medium', cr:15,   sf:150,  fc:[0,1,0,0,0,0,0,0,0,0,0,1],              so:[15,15,15,15,15,15,15,15,15,15,15,0],            inv:[764,750,735,646,632,617,603,588,573,559,544,529]},
+  {s:'KM1SOB004P', cat:'Energy Metering', tier:'V3', price:171.91,  lt:4, min:0,   max:1,    std:0,    cov:3.16, var:'High',   cr:0,    sf:26,   fc:[0,0,0,0,0,0,0,0,0,0,0,0],              so:[0,0,0,0,0,0,0,0,0,0,0,0],                      inv:[311,311,311,311,311,310,310,310,310,310,310,310]},
+  {s:'KM1SOB005P', cat:'Uncategorized',   tier:'N/A',price:168.61,  lt:4, min:0,   max:0,    std:0,    cov:0,    var:'High',   cr:0,    sf:26,   fc:[0,0,0,0,0,0,0,0,0,0,0,0],              so:[0,0,0,0,0,0,0,0,0,0,0,0],                      inv:[3,3,3,3,3,3,3,3,3,3,3,3]},
+  {s:'KM1SOB006P', cat:'Uncategorized',   tier:'N/A',price:235.03,  lt:4, min:0,   max:0,    std:0,    cov:0,    var:'High',   cr:0,    sf:0,    fc:[0,2,0,0,0,0,0,0,0,0,0,2],              so:[0,2,0,0,0,0,0,0,0,0,0,0],                      inv:[60,60,58,58,58,58,58,58,58,58,58,58]},
+  {s:'KM1CDA007P', cat:'Energy Metering', tier:'V2', price:408.4,   lt:4, min:2,   max:10,   std:2,    cov:0.66, var:'Low',    cr:4,    sf:1,    fc:[3,3,4,2,1,0,0,1,0,0,0,18],             so:[4,4,4,4,4,4,4,4,4,4,4,0],                      inv:[12,-5,-17,-24,-28,-32,-35,-39,-42,-46,-50,-53]},
+  {s:'KM1BNC001P', cat:'Energy Metering', tier:'V3', price:129.59,  lt:4, min:2,   max:29,   std:10,   cov:1.65, var:'Medium', cr:6,    sf:0,    fc:[12,0,0,0,0,0,0,0,0,0,0,12],            so:[12,6,6,6,6,6,6,6,6,6,6,0],                     inv:[20,8,1,-5,-11,-17,-24,-30,-36,-42,-49,-55]},
+  {s:'KM1BNC002P', cat:'Energy Metering', tier:'V4', price:94.5,    lt:4, min:5,   max:6,    std:2,    cov:1.76, var:'Medium', cr:1,    sf:0,    fc:[12,0,0,0,0,0,0,0,0,0,0,12],            so:[12,1,1,1,1,1,1,1,1,1,1,0],                     inv:[5,-7,-8,-10,-11,-12,-13,-14,-15,-17,-18,-19]},
+  {s:'KM1KMS031P', cat:'Energy Metering', tier:'V4', price:0.101,   lt:4, min:158, max:2028, std:628,  cov:0.79, var:'Low',    cr:791,  sf:0,    fc:[0,0,0,1,0,0,0,0,0,0,0,1],              so:[791,791,791,791,791,791,791,791,791,791,791,0], inv:[168,-625,-1416,-2207,-2998,-3788,-4579,-5370,-6161,-6952,-7743,-8534]},
+  {s:'KM1PLS029P', cat:'Energy Metering', tier:'V4', price:0.094,   lt:4, min:140, max:3692, std:1194, cov:0.81, var:'Low',    cr:1467, sf:0,    fc:[0,0,15,0,0,0,0,0,0,0,0,15],            so:[1467,1467,1467,1467,1467,1467,1467,1467,1467,1467,1467,0], inv:[1281,-190,-1657,-3124,-4591,-6057,-7524,-8991,-10458,-11925,-13392,-14859]},
+  {s:'KM1SLW030P', cat:'Energy Metering', tier:'V4', price:56.25,   lt:4, min:2,   max:2,    std:1,    cov:0.87, var:'Low',    cr:1,    sf:0,    fc:[0,0,15,0,0,0,0,0,0,0,0,15],            so:[1,1,15,1,1,1,1,1,1,1,1,0],                     inv:[0,-1,-1,-16,-17,-18,-19,-20,-21,-21,-22,-23]},
+];
+
+// ── DEFAULTS ──────────────────────────────────────────────────
+Chart.defaults.color = '#4a5160';
+Chart.defaults.borderColor = '#e8eaed';
+Chart.defaults.font.family = "'Source Sans 3', 'Helvetica Neue', Arial, sans-serif";
+Chart.defaults.font.size = 11;
+
+const PALETTE = ['#002147','#005b99','#0077cc','#c0392b','#1a7a4a','#d4820a','#6a3fc8','#1a5276','#117a65','#7d3c98','#1e8449','#b7770d'];
+
+function fmt(v) { return v < 0 ? '(' + Math.abs(v).toLocaleString() + ')' : v.toLocaleString(); }
+
+// ── TAB SWITCH ────────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── SHARED OPTIONS HELPER ──────────────────────────────────────
+function baseOpts(extra) {
+  return Object.assign({
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: '#e8eaed' }, ticks: { font: { size: 10 }, callback: v => Math.abs(v) >= 1000 ? (v/1000).toFixed(0) + 'k' : v } }
+    }
+  }, extra);
+}
+
+// ── CHART 1: Aggregate Inventory ─────────────────────────────
+(function(){
+  const agg = MONTHS.map((_,i) => SKUS.reduce((s,k) => s + (k.inv[i]||0), 0));
+  new Chart(document.getElementById('c-aggInv').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: MONTHS,
+      datasets: [{ label: 'Aggregate Inventory', data: agg,
+        backgroundColor: agg.map(v => v >= 0 ? 'rgba(26,122,74,0.65)' : 'rgba(192,57,43,0.65)'),
+        borderColor: agg.map(v => v >= 0 ? '#1a7a4a' : '#c0392b'),
+        borderWidth: 1, borderRadius: 3 }]
+    },
+    options: baseOpts({ plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.parsed.y.toLocaleString() + ' units' } } } })
+  });
+})();
+
+// ── CHART 2: Jan Health ───────────────────────────────────────
+(function(){
+  const sorted = [...SKUS].sort((a,b) => a.inv[0] - b.inv[0]);
+  new Chart(document.getElementById('c-janHealth').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(k => k.s.replace('KM1','').replace('P','')),
+      datasets: [{ data: sorted.map(k => k.inv[0]),
+        backgroundColor: sorted.map(k => k.inv[0] > 50 ? 'rgba(26,122,74,0.65)' : k.inv[0] > 0 ? 'rgba(212,130,10,0.65)' : 'rgba(192,57,43,0.65)'),
+        borderRadius: 3, borderWidth: 0 }]
+    },
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:{color:'#e8eaed'}, ticks:{font:{size:9}, callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v}},
+               y:{ grid:{display:false}, ticks:{font:{size:9}} } } }
+  });
+})();
+
+// ── CHART 3: FC vs Croston ────────────────────────────────────
+(function(){
+  const top = [...SKUS].filter(k => k.cr > 0 || k.sf > 0).sort((a,b) => (b.cr+b.sf)-(a.cr+a.sf)).slice(0,12);
+  new Chart(document.getElementById('c-fcVsCroston').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: top.map(k => k.s.replace('KM1','').replace('P','')),
+      datasets: [
+        { label:'Croston Baseline', data:top.map(k=>k.cr), backgroundColor:'rgba(0,91,153,0.65)', borderRadius:3 },
+        { label:'SF Pipeline Qty',  data:top.map(k=>k.sf), backgroundColor:'rgba(212,130,10,0.65)', borderRadius:3 }
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{ display:true, position:'bottom', labels:{boxWidth:10,font:{size:10},padding:10}} },
+      scales:{ x:{grid:{display:false},ticks:{font:{size:9}}}, y:{grid:{color:'#e8eaed'}} } }
+  });
+})();
+
+// ── CHART 4: Trajectory Lines ─────────────────────────────────
+(function(){
+  const picks = [SKUS[0],SKUS[1],SKUS[8],SKUS[16],SKUS[17],SKUS[13]];
+  new Chart(document.getElementById('c-trajLines').getContext('2d'), {
+    type:'line',
+    data:{
+      labels:MONTHS,
+      datasets:picks.map((k,i) => ({
+        label:k.s.replace('KM1',''),
+        data:k.inv,
+        borderColor:PALETTE[i],
+        backgroundColor:'transparent',
+        borderWidth:2, pointRadius:3, tension:0.3
+      }))
+    },
+    options:{ responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:8}} },
+      scales:{ x:{grid:{display:false}}, y:{grid:{color:'#e8eaed'},ticks:{callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v}} } }
+  });
+})();
+
+// ── CHART 5: Stock-Out Month ──────────────────────────────────
+(function(){
+  const at = SKUS.filter(k=>k.inv.some(v=>v<0));
+  const mo = at.map(k=>{ const i=k.inv.findIndex(v=>v<0); return i>=0?i+1:13; });
+  new Chart(document.getElementById('c-stockOutMonth').getContext('2d'), {
+    type:'bar',
+    data:{
+      labels:at.map(k=>k.s.replace('KM1','').replace('P','')),
+      datasets:[{ data:mo,
+        backgroundColor:mo.map(m=>m<=2?'rgba(192,57,43,0.75)':m<=4?'rgba(212,130,10,0.75)':'rgba(0,91,153,0.6)'),
+        borderRadius:3, borderWidth:0 }]
+    },
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Goes negative: '+MONTHS[c.parsed.y-1]}}},
+      scales:{y:{min:0,max:12,grid:{color:'#e8eaed'},ticks:{callback:v=>MONTHS[v-1]||'',font:{size:10}}},
+              x:{grid:{display:false},ticks:{font:{size:9}}}}}
+  });
+})();
+
+// ── HEATMAP ───────────────────────────────────────────────────
+(function(){
+  const g = document.getElementById('heatGrid');
+  const blank=document.createElement('div'); blank.className='heat-hdr'; g.appendChild(blank);
+  MONTHS.forEach(m=>{ const h=document.createElement('div'); h.className='heat-hdr'; h.textContent=m; g.appendChild(h); });
+  SKUS.forEach(k=>{
+    const lbl=document.createElement('div'); lbl.className='heat-lbl';
+    lbl.textContent=k.s.replace('KM1',''); lbl.title=k.s; g.appendChild(lbl);
+    k.inv.forEach(v=>{
+      const c=document.createElement('div'); c.className='heat-cell';
+      let bg,col;
+      if(v<0){bg='#f8d7da';col='#c0392b';}
+      else if(v===0){bg='#e8eaed';col='#8d939e';}
+      else if(v<=50){bg='#fff3cd';col='#856404';}
+      else{bg='#d4edda';col='#155724';}
+      c.style.background=bg; c.style.color=col;
+      c.textContent=v===0?'0':Math.abs(v)>=1000?Math.round(v/1000)+'k':v<-1000?Math.round(v/1000)+'k':v;
+      g.appendChild(c);
+    });
+  });
+})();
+
+// ── CHART 6: Collab FC Lines ─────────────────────────────────
+(function(){
+  const picks=[SKUS[0],SKUS[1],SKUS[2],SKUS[8],SKUS[3],SKUS[9]];
+  new Chart(document.getElementById('c-collabFC').getContext('2d'),{
+    type:'line',
+    data:{labels:MONTHS,
+      datasets:picks.map((k,i)=>({label:k.s.replace('KM1','').replace('P',''),data:k.fc,
+        borderColor:PALETTE[i],backgroundColor:'transparent',borderWidth:2,pointRadius:3,tension:0.2}))
+    },
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:8}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'#e8eaed'}}}}
+  });
+})();
+
+// ── CHART 7: Open SO ─────────────────────────────────────────
+(function(){
+  const totals=MONTHS.map((_,i)=>SKUS.reduce((s,k)=>s+(k.so[i]||0),0));
+  new Chart(document.getElementById('c-openSO').getContext('2d'),{
+    type:'bar',
+    data:{labels:MONTHS,datasets:[{label:'Open SO Qty',data:totals,
+      backgroundColor:'rgba(212,130,10,0.55)',borderColor:'#d4820a',borderWidth:1,borderRadius:3}]},
+    options:baseOpts({plugins:{legend:{display:false}},scales:{y:{grid:{color:'#e8eaed'},ticks:{callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v}},x:{grid:{display:false}}}})
+  });
+})();
+
+// ── CHART 8: CoV ─────────────────────────────────────────────
+(function(){
+  const s=[...SKUS].filter(k=>k.cov>0).sort((a,b)=>b.cov-a.cov);
+  new Chart(document.getElementById('c-cov').getContext('2d'),{
+    type:'bar',
+    data:{labels:s.map(k=>k.s.replace('KM1','').replace('P','')),
+      datasets:[{data:s.map(k=>k.cov),
+        backgroundColor:s.map(k=>k.cov>2?'rgba(192,57,43,0.7)':k.cov>1.5?'rgba(212,130,10,0.7)':'rgba(0,91,153,0.65)'),
+        borderRadius:3,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false}},
+      scales:{y:{grid:{color:'#e8eaed'},title:{display:true,text:'Coefficient of Variation',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:9}}}}}
+  });
+})();
+
+// ── CHART 9: SF vs Croston ───────────────────────────────────
+(function(){
+  const s=[...SKUS].filter(k=>k.sf>0||k.cr>0).sort((a,b)=>b.sf-a.sf).slice(0,10);
+  new Chart(document.getElementById('c-sfVsCroston').getContext('2d'),{
+    type:'bar',
+    data:{labels:s.map(k=>k.s.replace('KM1','').replace('P','')),
+      datasets:[
+        {label:'Salesforce Qty',data:s.map(k=>k.sf),backgroundColor:'rgba(0,119,204,0.65)',borderRadius:3},
+        {label:'Croston Baseline',data:s.map(k=>k.cr),backgroundColor:'rgba(0,33,71,0.65)',borderRadius:3}
+      ]},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},padding:10}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#e8eaed'}}}}
+  });
+})();
+
+// ── RISK TABLE ───────────────────────────────────────────────
+(function(){
+  const at=[...SKUS].filter(k=>k.inv.some(v=>v<0)).sort((a,b)=>{
+    const ai=a.inv.findIndex(v=>v<0), bi=b.inv.findIndex(v=>v<0);
+    return ai-bi;
+  });
+  const tierMap={V1:'v1',V2:'v2',V3:'v3',V4:'v4','N/A':'na'};
+  const varMap={Low:'low',Medium:'medium',High:'high'};
+  const t=document.getElementById('riskTable');
+  t.innerHTML=`<thead><tr>
+    <th>SKU</th><th>Cat.</th><th>Tier</th><th>Variability</th>
+    ${MONTHS.map(m=>`<th>${m}</th>`).join('')}
+    <th>Worst</th><th>Priority</th></tr></thead>`;
+  const tb=document.createElement('tbody');
+  at.forEach(k=>{
+    const worst=Math.min(...k.inv);
+    const firstNeg=k.inv.findIndex(v=>v<0);
+    const tr=document.createElement('tr');
+    const flag=firstNeg<=1?'<span class="flag-urgent">▲ URGENT</span>':firstNeg<=3?'<span class="flag-soon">▲ Soon</span>':'<span class="flag-monitor">▼ Monitor</span>';
+    tr.innerHTML=`
+      <td class="sku-id">${k.s}</td>
+      <td style="font-size:11px;color:var(--text2)">${k.cat}</td>
+      <td><span class="pill pill-${tierMap[k.tier]}">${k.tier}</span></td>
+      <td><span class="pill pill-${varMap[k.var]}">${k.var}</span></td>
+      ${k.inv.map(v=>`<td class="${v<0?'neg':v>50?'pos':''}">${fmt(v)}</td>`).join('')}
+      <td class="neg">${fmt(worst)}</td>
+      <td>${flag}</td>`;
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+})();
+
+// ── CHART 10: Deficit ────────────────────────────────────────
+(function(){
+  const at=[...SKUS].filter(k=>k.inv.some(v=>v<0));
+  const worst=at.map(k=>Math.abs(Math.min(...k.inv)));
+  new Chart(document.getElementById('c-deficit').getContext('2d'),{
+    type:'bar',
+    data:{labels:at.map(k=>k.s.replace('KM1','').replace('P','')),
+      datasets:[{data:worst,
+        backgroundColor:worst.map((_,i)=>{const fi=at[i].inv.findIndex(v=>v<0);return fi<=1?'rgba(192,57,43,0.75)':'rgba(212,130,10,0.7)';}),
+        borderRadius:3,borderWidth:0}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' Deficit: '+c.parsed.x.toLocaleString()+' units'}}},
+      scales:{x:{grid:{color:'#e8eaed'},ticks:{callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+  });
+})();
+
+// ── CHART 11: Bubble ─────────────────────────────────────────
+(function(){
+  const s=SKUS.filter(k=>k.cov>0&&k.max>0);
+  new Chart(document.getElementById('c-bubble').getContext('2d'),{
+    type:'bubble',
+    data:{datasets:s.map(k=>({
+      label:k.s.replace('KM1',''),
+      data:[{x:k.lt,y:k.cov,r:Math.max(5,Math.min(28,Math.sqrt(k.max)))}],
+      backgroundColor:k.inv.some(v=>v<0)?'rgba(192,57,43,0.4)':'rgba(26,122,74,0.4)',
+      borderColor:k.inv.some(v=>v<0)?'#c0392b':'#1a7a4a',
+      borderWidth:1.5
+    }))},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+' | CoV: '+c.parsed.y.toFixed(2)}}},
+      scales:{
+        x:{title:{display:true,text:'Lead Time (months)',font:{size:10}},grid:{color:'#e8eaed'},min:3,max:5},
+        y:{title:{display:true,text:'Coefficient of Variation',font:{size:10}},grid:{color:'#e8eaed'}}
+      }}
+  });
+})();
+</script>
+</body>
+</html>
